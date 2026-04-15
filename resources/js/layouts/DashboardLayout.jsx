@@ -1,50 +1,70 @@
 // resources/js/layouts/DashboardLayout.jsx
 /**
- * Layout principal para las páginas del dashboard.
- * Incluye Sidebar, Navbar, área de contenido y Footer.
- * Gestiona el estado del sidebar (colapsado) mediante un hook.
+ * Layout principal del dashboard.
+ *
+ * Patrón: Provider + Consumer separados en el mismo archivo.
+ * - DashboardLayout  → provee el contexto (SidebarProvider)
+ * - DashboardContent → consume el contexto (useSidebar)
+ *
+ * Esto garantiza que Sidebar y el área de contenido compartan
+ * el mismo estado isCollapsed, resolviendo el bug de expansión.
  */
-
 import React from 'react';
 import { Head } from '@inertiajs/react';
 import Sidebar from '../components/navigation/Sidebar';
 import Navbar from '../components/navigation/Navbar';
 import Footer from '../components/navigation/Footer';
-import { useSidebar } from '../hooks/useSidebar';
+import { SidebarProvider, useSidebar } from '../context/SidebarContext';
 
-/**
- * @param {Object} props
- * @param {React.ReactNode} props.children - Contenido de la página
- * @param {string} props.title - Título de la página (para el Head)
- */
-const DashboardLayout = ({ children, title = 'Dashboard' }) => {
+const DashboardContent = ({ children, title }) => {
   const { isCollapsed } = useSidebar();
 
   return (
     <>
       <Head title={title} />
       <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
+
+        {/* Sidebar fijo — su ancho lo controla su propio estado */}
         <Sidebar />
 
-        {/* Contenido principal, se desplaza según el estado del sidebar */}
+        {/*
+          Área de contenido principal.
+          ml-20 (sidebar colapsado = 5rem) / ml-64 (expandido = 16rem)
+          La transición coincide con la del sidebar para que
+          el movimiento se vea sincronizado.
+        */}
         <div
           className={`
-            transition-all duration-300 ease-in-out
+            flex flex-col min-h-screen
+            transition-[margin-left] duration-300 ease-in-out
             ${isCollapsed ? 'ml-20' : 'ml-64'}
           `}
         >
           <Navbar />
 
-          {/* Área de contenido principal con padding */}
-          <main className="min-h-[calc(100vh-4rem-64px)] py-6 px-4 sm:px-6 lg:px-8">
+          <main className="flex-1 py-6 px-4 sm:px-6 lg:px-8">
             {children}
           </main>
 
           <Footer />
         </div>
+
       </div>
     </>
   );
 };
+
+/**
+ * @param {Object}           props
+ * @param {React.ReactNode}  props.children  - Contenido de la página
+ * @param {string}           [props.title]   - Título para <head>
+ */
+const DashboardLayout = ({ children, title = 'Dashboard' }) => (
+  <SidebarProvider>
+    <DashboardContent title={title}>
+      {children}
+    </DashboardContent>
+  </SidebarProvider>
+);
 
 export default DashboardLayout;

@@ -5,44 +5,60 @@
 
 // Importación dinámica de iconos de HugeIcons (asumiendo que se usan como componentes)
 // En un proyecto real, importarías los iconos específicos, ej:
-// import { HomeIcon, DashboardIcon, AquariumIcon, ... } from 'hugeicons/react';
+// import { Home03Icon, DashboardIcon, AquariumIcon, ... } from 'hugeicons/react';
 
 // Placeholder para iconos
-const IconPlaceholder = () => <span className="w-5 h-5 bg-gray-300 rounded inline-block"></span>;
+import {
+    DashboardSquare02Icon,
+    FishFoodIcon,
+    SoilTemperatureGlobalIcon,
+ } from 'hugeicons-react';
 
 /**
  * Define la estructura de la navegación principal del sidebar.
  * Cada item puede tener un label, una ruta, un icono y opcionalmente hijos (submenús).
  */
 export const NAVIGATION_ITEMS = [
-  {
-    label: 'Dashboard',
-    path: '/dashboard',
-    icon: IconPlaceholder, // Reemplazar con HugeIcon: DashboardIcon
-  },
-  {
-    label: 'Acuarios',
-    path: '/aquariums',
-    icon: IconPlaceholder, // Reemplazar con HugeIcon: AquariumIcon
-  },
-  {
-    label: 'Sensores',
-    path: '/sensors',
-    icon: IconPlaceholder, // Reemplazar con HugeIcon: SensorIcon
-  },
-  {
-    label: 'Configuración',
-    path: '/settings',
-    icon: IconPlaceholder, // Reemplazar con HugeIcon: SettingsIcon
-    children: [ // Ejemplo de submenú
-      { label: 'Perfil', path: '/settings/profile' },
-      { label: 'Preferencias', path: '/settings/preferences' },
-    ],
-  },
+    {
+        label: "Dashboard",
+        route: "admin.home",
+        icon: DashboardSquare02Icon,
+    },
+    {
+        label: 'Acuarios',
+        // route: "admin.aquariums",
+        route: "admin.home",
+        icon: FishFoodIcon,
+    },
+    {
+        label: "Sensores",
+        // route: 'admin.sensors',
+        route: "admin.home",
+        icon: SoilTemperatureGlobalIcon,
+    },
+    {
+        label: "Configuración",
+        // route: 'admin.settings',
+        route: "admin.home",
+        icon: DashboardSquare02Icon,
+        children: [
+            // Ejemplo de submenú
+            {
+                label: "Perfil",
+                // route: "admin.settings.profile"
+                route: "admin.home",
+            },
+            {
+                label: "Preferencias",
+                // route: "admin.settings.preferences"
+                route: "admin.home",
+            },
+        ],
+    },
 ];
 
 /**
  * Constantes para acciones comunes o rutas específicas.
  */
-export const APP_NAME = 'Mi Dashboard';
-export const HOME_ROUTE = '/dashboard';
+export const APP_NAME = "Mi Dashboard";
+export const HOME_ROUTE = "admin.home";
