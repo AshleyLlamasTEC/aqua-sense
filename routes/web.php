@@ -1,10 +1,20 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
 
 Route::get('/', function () {
-    return Inertia\Inertia::render('Home', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-    ]);
-});
+    return Inertia::render('Home');
+})->name('home');
+
+Route::get('/about', function () {
+    return Inertia::render('About');
+})->name('about');
+
+Route::get('/contact', function () {
+    return Inertia::render('Contact');
+})->name('contact');
+
+Route::get('/aquarium-demo', function () {
+    return Inertia::render('AquariumDemo');
+})->name('aquariumDemo');

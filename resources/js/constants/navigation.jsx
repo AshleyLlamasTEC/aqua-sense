@@ -26,8 +26,7 @@ export const NAVIGATION_ITEMS = [
     },
     {
         label: 'Acuarios',
-        // route: "admin.aquariums",
-        route: "admin.home",
+        route: "admin.aquariums.index",
         icon: FishFoodIcon,
     },
     {

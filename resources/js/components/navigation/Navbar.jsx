@@ -1,4 +1,3 @@
-// resources/js/components/navigation/Navbar.jsx
 /**
  * Navbar superior.
  *
@@ -10,6 +9,7 @@ import React from 'react';
 import { Menu } from '@ark-ui/react';
 import { useTheme } from '../../hooks/useTheme';
 import Button from '../ui/Button';
+import { route } from 'ziggy-js';
 
 const SunIcon = () => (
   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
