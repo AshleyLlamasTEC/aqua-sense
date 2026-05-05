@@ -1,111 +1,166 @@
-/**
- * Navbar superior.
- *
- * Fix: Menu.Item de Ark UI requiere la prop `value` (string único).
- * Sin ella Ark lanza un warning en consola y el menú puede
- * comportarse de forma inesperada.
- */
-import React from 'react';
-import { Menu } from '@ark-ui/react';
-import { useTheme } from '../../hooks/useTheme';
-import Button from '../ui/Button';
-import { route } from 'ziggy-js';
-
-const SunIcon = () => (
-  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-      d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-  </svg>
-);
-
-const MoonIcon = () => (
-  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-      d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-  </svg>
-);
-
-const UserIcon = () => (
-  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-  </svg>
-);
+import { useState, useEffect, useRef } from 'react';
+import { Link, usePage } from '@inertiajs/react';
+import { useSidebarStore } from '../navigation/stores/useSidebarStore';
+import { useIsMobile } from '../navigation/hooks/useMediaQuery';
 
 const Navbar = () => {
-  const { theme, toggleTheme } = useTheme();
+
+  const isMobile = useIsMobile();
+
+  const { toggleMobile } = useSidebarStore();
+
+  const { auth } = usePage().props;
+
+  const user = auth.user;
+
+  const [showDropdown, setShowDropdown] = useState(false);
+
+  const dropdownRef = useRef();
+
+
+  useEffect(() => {
+
+    const handleClickOutside = (event) => {
+
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target)
+      ) {
+        setShowDropdown(false);
+      }
+
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener(
+        'mousedown',
+        handleClickOutside
+      );
+    };
+
+  }, []);
+
 
   return (
-    <header className="sticky top-0 z-30 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border-b border-gray-200 dark:border-gray-800">
-      <div className="px-4 sm:px-6 lg:px-8">
+
+    <header className="sticky top-0 z-50 bg-white/70 backdrop-blur-xl border-b border-gray-200/60">
+
+      <div className="px-4 lg:px-6">
+
         <div className="flex items-center justify-between h-16">
 
-          {/* Espacio izquierdo — breadcrumbs o título de página */}
-          <div className="flex-1" />
 
-          {/* Acciones derecha */}
-          <div className="flex items-center gap-2">
+          {/* Izquierda */}
+          <div className="flex items-center gap-3">
 
-            {/* Toggle de tema */}
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={toggleTheme}
-              aria-label={`Cambiar a modo ${theme === 'light' ? 'oscuro' : 'claro'}`}
-            >
-              {theme === 'light' ? <MoonIcon /> : <SunIcon />}
-            </Button>
+            {isMobile && (
 
-            {/* Menú de usuario — value es obligatorio en Ark UI */}
-            <Menu.Root>
-              <Menu.Trigger asChild>
-                <Button variant="ghost" size="sm" className="gap-2">
-                  <UserIcon />
-                  <span className="hidden sm:inline text-sm">Usuario</span>
-                </Button>
-              </Menu.Trigger>
+              <button
+                onClick={toggleMobile}
+                className="p-2 rounded-lg hover:bg-gray-100"
+                aria-label="Abrir menú"
+              >
 
-              <Menu.Positioner>
-                <Menu.Content
-                  className="
-                    bg-white dark:bg-gray-800
-                    rounded-lg shadow-lg
-                    border border-gray-200 dark:border-gray-700
-                    py-1 min-w-[180px]
-                    z-50
-                  "
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
                 >
-                  <Menu.Item
-                    value="profile"
-                    className="px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer outline-none"
-                  >
-                    Perfil
-                  </Menu.Item>
 
-                  <Menu.Item
-                    value="settings"
-                    className="px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer outline-none"
-                  >
-                    Configuración
-                  </Menu.Item>
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4 6h16M4 12h16M4 18h16"
+                  />
 
-                  <Menu.Separator className="my-1 border-t border-gray-200 dark:border-gray-700" />
+                </svg>
 
-                  <Menu.Item
-                    value="logout"
-                    className="px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer outline-none"
-                  >
-                    Cerrar sesión
-                  </Menu.Item>
-                </Menu.Content>
-              </Menu.Positioner>
-            </Menu.Root>
+              </button>
+
+            )}
+
+            <h1 className="text-lg font-semibold">
+                AquaSenseIoT
+            </h1>
 
           </div>
+
+
+
+          {/* Derecha */}
+          <div
+            className="relative"
+            ref={dropdownRef}
+          >
+
+            <button
+              onClick={() => setShowDropdown(!showDropdown)}
+              className="flex items-center justify-center w-10 h-10 rounded-full bg-cyan-600 text-white font-semibold hover:bg-cyan-700 transition"
+            >
+
+              {user.name.charAt(0).toUpperCase()}
+
+            </button>
+
+
+
+            {showDropdown && (
+
+              <div className="absolute right-0 mt-2 w-52 bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+
+                {/* Info usuario */}
+                <div className="px-4 py-3 border-b bg-gray-50">
+
+                  <p className="text-sm font-medium text-gray-900">
+                    {user.name}
+                  </p>
+
+                  <p className="text-xs text-gray-500 truncate">
+                    {user.email}
+                  </p>
+
+                </div>
+
+
+
+                {/* Perfil */}
+                <Link
+                  href={route('profile.edit')}
+                  className="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50"
+                >
+                  Mi perfil
+                </Link>
+
+
+
+                {/* Logout */}
+                <Link
+                  href={route('logout')}
+                  method="post"
+                  as="button"
+                  className="block w-full text-left px-4 py-3 text-sm text-red-600 hover:bg-red-50"
+                >
+                  Cerrar sesión
+                </Link>
+
+              </div>
+
+            )}
+
+          </div>
+
         </div>
+
       </div>
+
     </header>
+
   );
+
 };
 
 export default Navbar;

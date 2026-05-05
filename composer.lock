@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "cd82eee5af0d46f81b58822271d2cdea",
+    "content-hash": "dd0b115710fbf2631cc262bd88c583e0",
     "packages": [
         {
             "name": "brick/math",
@@ -1054,16 +1054,16 @@
         },
         {
             "name": "inertiajs/inertia-laravel",
-            "version": "v2.0.21",
+            "version": "v2.0.24",
             "source": {
                 "type": "git",
                 "url": "https://github.com/inertiajs/inertia-laravel.git",
-                "reference": "fabf202a29023de5f2d59f1474271fa35f84f1d4"
+                "reference": "ea345adad12f110edbbc4bef03b69c2374a535d4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/inertiajs/inertia-laravel/zipball/fabf202a29023de5f2d59f1474271fa35f84f1d4",
-                "reference": "fabf202a29023de5f2d59f1474271fa35f84f1d4",
+                "url": "https://api.github.com/repos/inertiajs/inertia-laravel/zipball/ea345adad12f110edbbc4bef03b69c2374a535d4",
+                "reference": "ea345adad12f110edbbc4bef03b69c2374a535d4",
                 "shasum": ""
             },
             "require": {
@@ -1071,6 +1071,9 @@
                 "laravel/framework": "^10.0|^11.0|^12.0|^13.0",
                 "php": "^8.1.0",
                 "symfony/console": "^6.2|^7.0|^8.0"
+            },
+            "conflict": {
+                "laravel/boost": "<2.2.0"
             },
             "require-dev": {
                 "guzzlehttp/guzzle": "^7.2",
@@ -1118,9 +1121,9 @@
             ],
             "support": {
                 "issues": "https://github.com/inertiajs/inertia-laravel/issues",
-                "source": "https://github.com/inertiajs/inertia-laravel/tree/v2.0.21"
+                "source": "https://github.com/inertiajs/inertia-laravel/tree/v2.0.24"
             },
-            "time": "2026-02-24T20:21:28+00:00"
+            "time": "2026-04-10T14:36:44+00:00"
         },
         {
             "name": "laravel/framework",
@@ -6397,6 +6400,67 @@
                 "source": "https://github.com/hamcrest/hamcrest-php/tree/v2.1.1"
             },
             "time": "2025-04-30T06:54:44+00:00"
+        },
+        {
+            "name": "laravel/breeze",
+            "version": "v2.4.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laravel/breeze.git",
+                "reference": "28cefeaf6af20177ddf5cc7b93e87e4ad79d533f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laravel/breeze/zipball/28cefeaf6af20177ddf5cc7b93e87e4ad79d533f",
+                "reference": "28cefeaf6af20177ddf5cc7b93e87e4ad79d533f",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/console": "^11.0|^12.0|^13.0",
+                "illuminate/filesystem": "^11.0|^12.0|^13.0",
+                "illuminate/support": "^11.0|^12.0|^13.0",
+                "illuminate/validation": "^11.0|^12.0|^13.0",
+                "php": "^8.2.0",
+                "symfony/console": "^7.0|^8.0"
+            },
+            "require-dev": {
+                "laravel/framework": "^11.0|^12.0|^13.0",
+                "orchestra/testbench-core": "^9.0|^10.0|^11.0",
+                "phpstan/phpstan": "^2.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Laravel\\Breeze\\BreezeServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Laravel\\Breeze\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Taylor Otwell",
+                    "email": "taylor@laravel.com"
+                }
+            ],
+            "description": "Minimal Laravel authentication scaffolding with Blade and Tailwind.",
+            "keywords": [
+                "auth",
+                "laravel"
+            ],
+            "support": {
+                "issues": "https://github.com/laravel/breeze/issues",
+                "source": "https://github.com/laravel/breeze"
+            },
+            "time": "2026-03-10T19:59:01+00:00"
         },
         {
             "name": "laravel/pail",

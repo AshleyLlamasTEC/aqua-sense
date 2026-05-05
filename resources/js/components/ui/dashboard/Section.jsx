@@ -20,11 +20,11 @@ const Section = ({ title, description, actions, children, className = '' }) => {
       {/* Cabecera de la sección */}
       <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
         <div>
-          <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">
+          <h2 className="text-2xl font-semibold text-gray-900">
             {title}
           </h2>
           {description && (
-            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+            <p className="mt-1 text-sm text-gray-500">
               {description}
             </p>
           )}

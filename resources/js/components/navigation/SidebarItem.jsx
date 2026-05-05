@@ -1,49 +1,69 @@
-// resources/js/components/navigation/SidebarItem.jsx
-/**
- * Componente para un item individual del sidebar.
- * Soporta iconos, etiquetas y estados activo/colapsado.
- */
-
-import React from 'react';
+// resources/js/Components/Sidebar/SidebarItem.jsx
 import { Link } from '@inertiajs/react';
-import { ark } from '@ark-ui/react';
+import { Tooltip } from '@ark-ui/react';
+import clsx from 'clsx';
 
-/**
- * Item del sidebar, puede ser un enlace o un botón (para submenús).
- * @param {Object} props
- * @param {React.ReactNode} props.icon - Componente del icono
- * @param {string} props.label - Texto del item
- * @param {string} props.href - Ruta de navegación (si es un enlace)
- * @param {boolean} props.active - Indica si la ruta actual coincide
- * @param {boolean} props.isCollapsed - Indica si el sidebar está colapsado
- * @param {function} props.onClick - Función al hacer click (para items sin href o submenús)
- */
-const SidebarItem = ({ icon: Icon, label, href, active = false, isCollapsed = false, onClick }) => {
-  const baseClasses = 'flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-150 ease-in-out';
-  const stateClasses = active
-    ? 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white'
-    : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800/50 hover:text-gray-900 dark:hover:text-gray-200';
+const SidebarItem = ({
+  icon: Icon,
+  label,
+  href,
+  active = false,
+  collapsed = false,
+  badge
+}) => {
+  const linkContent = (
+    <Link
+      href={href}
+      className={clsx(
+        'flex items-center h-10 rounded-lg transition-all duration-200',
+        'focus:outline-none focus:ring-2 focus:ring-blue-500/50',
+        collapsed ? 'justify-center px-0' : 'px-3',
+        active
+          ? 'bg-gradient-to-r from-blue-500/10 to-cyan-400/10 text-blue-600'
+          : 'text-gray-600 hover:bg-gray-100'
+      )}
+    >
+      <div className="relative flex-shrink-0">
+        <Icon className="w-5 h-5" />
+      </div>
 
-  const content = (
-    <>
-      {Icon && <Icon className="w-5 h-5 flex-shrink-0" />}
-      {!isCollapsed && <span className="truncate">{label}</span>}
-    </>
+      <span className={clsx(
+        'ml-3 whitespace-nowrap transition-all duration-200',
+        collapsed && 'w-0 opacity-0 overflow-hidden'
+      )}>
+        {label}
+      </span>
+
+      {badge && !collapsed && (
+        <span className="ml-auto px-2 py-0.5 text-xs font-semibold text-white bg-red-500 rounded-full">
+          {badge}
+        </span>
+      )}
+
+      {active && (
+        <div className="absolute left-0 w-1 h-6 bg-gradient-to-b from-blue-500 to-cyan-400 rounded-r-full" />
+      )}
+    </Link>
   );
 
-  if (href) {
+  // Tooltip solo cuando está colapsado
+  if (collapsed) {
     return (
-      <Link href={href} className={`${baseClasses} ${stateClasses}`}>
-        {content}
-      </Link>
+      <Tooltip.Root openDelay={200} closeDelay={100}>
+        <Tooltip.Trigger asChild>
+          <div className="w-full">{linkContent}</div>
+        </Tooltip.Trigger>
+        <Tooltip.Positioner>
+          <Tooltip.Content className="z-50 px-3 py-1.5 text-sm text-white bg-gray-900 rounded-lg shadow-lg">
+            {label}
+            {badge && ` (${badge})`}
+          </Tooltip.Content>
+        </Tooltip.Positioner>
+      </Tooltip.Root>
     );
   }
 
-  return (
-    <ark.button onClick={onClick} className={`w-full ${baseClasses} ${stateClasses}`}>
-      {content}
-    </ark.button>
-  );
+  return linkContent;
 };
 
 export default SidebarItem;

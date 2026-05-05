@@ -12,8 +12,8 @@ import {
   UserIcon,
   EarthIcon,
   Target01Icon,
-  EyeIcon,
-  Mail01Icon,
+  ViewIcon,
+  MailAtSign01Icon,
   TwitterIcon,
   GithubIcon
 } from 'hugeicons-react';
@@ -64,10 +64,10 @@ const About = () => {
   ];
 
   const milestones = [
-    { year: "2021", title: "Fundación", description: "AquaSense nace con la visión de revolucionar el monitoreo de acuarios" },
+    { year: "2021", title: "Fundación", description: "AquaSenseIoT nace con la visión de revolucionar el monitoreo de acuarios" },
     { year: "2022", title: "Primer Prototipo", description: "Lanzamos nuestro primer prototipo funcional con ESP32" },
     { year: "2023", title: "Beta Público", description: "Más de 500 acuaristas se unen a nuestro programa beta" },
-    { year: "2024", title: "Lanzamiento Oficial", description: "AquaSense llega al mercado con gran éxito" }
+    { year: "2024", title: "Lanzamiento Oficial", description: "AquaSenseIoT llega al mercado con gran éxito" }
   ];
 
   return (
@@ -90,7 +90,7 @@ const About = () => {
               de <span className="text-cyan-300">Acuarios</span>
             </h1>
             <p className="text-xl text-white/90 max-w-3xl mx-auto">
-              En AquaSense, combinamos tecnología de vanguardia con pasión por la vida acuática
+              En AquaSenseIoT, combinamos tecnología de vanguardia con pasión por la vida acuática
               para crear soluciones inteligentes que facilitan el monitoreo y cuidado de tus acuarios.
             </p>
           </div>
@@ -103,7 +103,7 @@ const About = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             <div className="bg-gradient-to-br from-cyan-50 to-blue-50 rounded-2xl p-8 shadow-lg animate-fade-up">
               <div className="inline-flex items-center justify-center w-14 h-14 bg-gradient-to-r from-cyan-600 to-blue-600 rounded-xl mb-6">
-                <EyeIcon className="w-7 h-7 text-white" />
+                <ViewIcon className="w-7 h-7 text-white" />
               </div>
               <h3 className="text-2xl font-bold text-gray-800 mb-4">Nuestra Misión</h3>
               <p className="text-gray-600 leading-relaxed">
@@ -224,7 +224,7 @@ const About = () => {
             ¿Listo para unirte a la revolución?
           </h2>
           <p className="text-xl text-white/90 mb-8 animate-fade-up animation-delay-200">
-          Únete a miles de acuaristas que ya confían en AquaSense
+          Únete a miles de acuaristas que ya confían en AquaSenseIoT
           </p>
           <Link href="/contact" className="animate-fade-up animation-delay-400 inline-block">
             <button className="bg-white text-cyan-600 hover:bg-gray-100 px-8 py-4 rounded-full text-lg font-semibold transition-all duration-300 transform hover:scale-105 shadow-xl">

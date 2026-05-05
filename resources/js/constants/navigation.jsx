@@ -12,6 +12,7 @@ import {
     DashboardSquare02Icon,
     FishFoodIcon,
     SoilTemperatureGlobalIcon,
+    CubeIcon
  } from 'hugeicons-react';
 
 /**

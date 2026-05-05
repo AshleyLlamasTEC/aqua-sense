@@ -1,119 +1,176 @@
-// resources/js/components/navigation/Sidebar.jsx
-/**
- * Sidebar lateral con scroll independiente.
- *
- * Mejoras:
- * - Importa useSidebar desde hooks/ (re-exporta desde context),
- *   no directamente desde context/ — mantiene la convención.
- * - Agrega título/tooltip en modo colapsado para accesibilidad.
- * - Icono de colapso rota visualmente según el estado.
- */
-import React from "react";
+// resources/js/Components/Sidebar/Sidebar.jsx
+import { useEffect } from "react";
 import { Link, usePage } from "@inertiajs/react";
-import { ark } from "@ark-ui/react";
-import { useSidebar } from "../../hooks/useSidebar";
-import { NAVIGATION_ITEMS } from "../../constants/navigation";
+import { useSidebarStore } from "../navigation/stores/useSidebarStore";
+import { useIsMobile } from "../navigation/hooks/useMediaQuery";
 import SidebarItem from "./SidebarItem";
-import { route } from "ziggy-js";
+import { NAVIGATION_ITEMS } from "@/constants/navigation";
+import {
+    DashboardSquare02Icon,
+    FishFoodIcon,
+    SoilTemperatureGlobalIcon,
+    Settings01Icon,
+} from "hugeicons-react";
+import clsx from "clsx";
 
-const CollapseIcon = ({ flipped }) => (
-    <svg
-        className={`w-5 h-5 transition-transform duration-300 ${flipped ? "rotate-180" : ""}`}
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-    >
-        <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M11 19l-7-7 7-7m8 14l-7-7 7-7"
-        />
-    </svg>
-);
+// Mapa de iconos (mejor que placeholder)
+const ICON_MAP = {
+    dashboard: DashboardSquare02Icon,
+    aquarium: FishFoodIcon,
+    sensor: SoilTemperatureGlobalIcon,
+    settings: Settings01Icon,
+};
 
 const Sidebar = () => {
-    const { isCollapsed, toggleSidebar } = useSidebar();
     const { url } = usePage();
+    const isMobile = useIsMobile();
 
-    const isItemActive = (itemPath) => {
-        if (itemPath === "/") return url === "/";
-        return url.startsWith(itemPath);
-    };
+    // Zustand store
+    const {
+        isCollapsed,
+        isMobileOpen,
+        toggleCollapsed,
+        closeMobile,
+        toggleMobile,
+    } = useSidebarStore();
+
+    // Bloquear scroll cuando sidebar mobile está abierto
+    useEffect(() => {
+        if (isMobile && isMobileOpen) {
+            document.body.style.overflow = "hidden";
+        } else {
+            document.body.style.overflow = "";
+        }
+        return () => {
+            document.body.style.overflow = "";
+        };
+    }, [isMobile, isMobileOpen]);
+
+    // Determinar visibilidad y ancho
+    const isVisible = isMobile ? isMobileOpen : true;
+    const width = isCollapsed && !isMobile ? "w-20" : "w-64";
+
+    // En móvil, si no está visible, no renderizar nada
+    if (!isVisible) return null;
 
     return (
-        <aside
-            className={`
-                fixed top-0 left-0 z-40 h-screen
-                backdrop-blur-xl
-                bg-white/80 dark:bg-gray-900/80
-                border-r border-gray-200/60 dark:border-gray-800/60
-                shadow-sm
-                transition-all duration-300 ease-in-out
-                ${isCollapsed ? "w-20" : "w-64"}
-            `}
-        >
-            {/* Cabecera: logo + botón colapsar */}
-            <div className="flex items-center h-16 px-4 border-b border-gray-200 dark:border-gray-800">
+        <>
+            {/* Overlay móvil */}
+            {isMobile && (
                 <div
-                    className={`flex-1 overflow-hidden transition-all duration-300 ${
-                        isCollapsed ? "w-0 opacity-0" : "opacity-100"
-                    }`}
-                >
-                    <Link
-                        href="/"
-                        className="flex flex-col items-center justify-center h-full text-gray-800 dark:text-white"
-                    >
-                        {/* Logo */}
-                        <img
-                            src="/images/logo.png"
-                            alt="AquaSense Logo"
-                            className="h-8 w-auto object-contain"
-                        />
+                    className="fixed inset-0 z-30 bg-black/50 backdrop-blur-sm"
+                    onClick={closeMobile}
+                />
+            )}
 
-                        {/* Texto */}
-                        <span className="text-xs font-semibold tracking-wide text-white dark:text-blue-400 leading-none">
-                            AquaSense
-                        </span>
-                    </Link>
+            {/* Sidebar */}
+            <aside
+                className={clsx(
+                    "fixed top-0 left-0 h-screen z-40",
+                    "bg-white/70 backdrop-blur-xl",
+                    "border-r border-gray-200/60",
+                    "shadow-xl transition-all duration-300 ease-out",
+                    width,
+                    isMobile && "transform",
+                    isMobile && !isMobileOpen && "-translate-x-full",
+                )}
+            >
+                {/* Header */}
+                <div className="flex items-center h-16 px-4 border-b border-gray-200/60">
+                    {(!isCollapsed || isMobile) && (
+                        <Link href="/" className="flex items-center space-x-2">
+                            <img
+                                src="/images/logo.png"
+                                alt="AquaSenseIoT"
+                                className="h-8 w-auto"
+                            />
+                            <span className="text-sm font-bold bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
+                                AquaSenseIoT
+                            </span>
+                        </Link>
+                    )}
+
+                    {/* Botón colapsar (solo desktop) */}
+                    {!isMobile && (
+                        <button
+                            onClick={toggleCollapsed}
+                            className={clsx(
+                                "p-2 ml-auto rounded-lg transition-colors",
+                                "hover:bg-gray-100",
+                                "text-gray-500",
+                            )}
+                            aria-label={isCollapsed ? "Expandir" : "Colapsar"}
+                        >
+                            <svg
+                                className={clsx(
+                                    "w-5 h-5 transition-transform duration-200",
+                                    isCollapsed && "rotate-180",
+                                )}
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M11 19l-7-7 7-7"
+                                />
+                            </svg>
+                        </button>
+                    )}
+
+                    {/* Botón cerrar (solo mobile) */}
+                    {isMobile && (
+                        <button
+                            onClick={closeMobile}
+                            className="p-2 ml-auto rounded-lg hover:bg-gray-100"
+                            aria-label="Cerrar menú"
+                        >
+                            <svg
+                                className="w-5 h-5"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M6 18L18 6M6 6l12 12"
+                                />
+                            </svg>
+                        </button>
+                    )}
                 </div>
 
-                <ark.button
-                    onClick={toggleSidebar}
-                    className="p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-500 dark:text-gray-400 transition-colors"
-                    aria-label={
-                        isCollapsed ? "Expandir sidebar" : "Colapsar sidebar"
-                    }
-                >
-                    <CollapseIcon flipped={isCollapsed} />
-                </ark.button>
-            </div>
+                {/* Navegación */}
+                <nav className="h-[calc(100vh-4rem)] overflow-y-auto py-4 px-3">
+                    <ul className="space-y-1">
+                        {NAVIGATION_ITEMS.map((item) => {
+                            const Icon = item.icon;
+                            const isActive =
+                                item.route === "/"
+                                    ? url === "/"
+                                    : route().current(item.route);
 
-            {/* Navegación con scroll independiente */}
-            <nav
-                className="h-[calc(100vh-4rem)] overflow-y-auto py-4 px-3
-                scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600
-                scrollbar-track-transparent"
-            >
-                <ul className="space-y-1">
-                    {NAVIGATION_ITEMS.map((item) => {
-                        if (!route().has(item.route)) return null;
-
-                        return (
-                            <li key={`${item.route}-${item.label}`}>
-                                <SidebarItem
-                                    icon={item.icon}
-                                    label={item.label}
-                                    href={route(item.route)}
-                                    active={isItemActive(item.route)}
-                                    isCollapsed={isCollapsed}
-                                />
-                            </li>
-                        );
-                    })}
-                </ul>
-            </nav>
-        </aside>
+                            return (
+                                <li key={item.route}>
+                                    <SidebarItem
+                                        icon={Icon}
+                                        label={item.label}
+                                        href={route(item.route)}
+                                        active={isActive}
+                                        collapsed={isCollapsed && !isMobile}
+                                        badge={item.badge}
+                                    />
+                                </li>
+                            );
+                        })}
+                    </ul>
+                </nav>
+            </aside>
+        </>
     );
 };
 

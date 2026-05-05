@@ -7,21 +7,32 @@
         "dev": "vite"
     },
     "devDependencies": {
+        "@headlessui/react": "^2.0.0",
+        "@inertiajs/react": "^2.0.0",
+        "@tailwindcss/forms": "^0.5.3",
         "@tailwindcss/vite": "^4.0.0",
+        "@vitejs/plugin-react": "^4.2.0",
+        "autoprefixer": "^10.4.12",
         "axios": "^1.11.0",
         "concurrently": "^9.0.1",
         "laravel-vite-plugin": "^2.0.0",
-        "tailwindcss": "^4.0.0",
+        "postcss": "^8.4.31",
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0",
+        "tailwindcss": "^3.2.1",
         "vite": "^7.0.7"
     },
     "dependencies": {
-        "@ark-ui/react": "^5.34.1",
+        "@ark-ui/react": "^5.36.2",
+        "@hugeicons/react": "^1.1.6",
         "@inertiajs/react": "^2.3.17",
         "@vitejs/plugin-react": "^4.7.0",
+        "clsx": "^2.1.1",
         "d3": "^7.9.0",
         "hugeicons-react": "^0.4.0",
         "react": "^19.2.4",
         "react-dom": "^19.2.4",
-        "ziggy-js": "^2.6.2"
+        "ziggy-js": "^2.6.2",
+        "zustand": "^5.0.12"
     }
 }

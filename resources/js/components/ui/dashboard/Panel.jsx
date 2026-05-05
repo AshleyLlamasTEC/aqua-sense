@@ -20,9 +20,9 @@ const Panel = ({ title, actions, children, className = '', noCardPadding = false
     <Card noPadding={noCardPadding}>
       {/* Cabecera del panel (si hay título o acciones) */}
       {(title || actions) && (
-        <div className="flex flex-wrap items-center justify-between gap-2 px-5 py-4 border-b border-gray-200 dark:border-gray-700">
+        <div className="flex flex-wrap items-center justify-between gap-2 px-5 py-4 border-b border-gray-200">
           {title && (
-            <h3 className="text-lg font-medium text-gray-900 dark:text-white">
+            <h3 className="text-lg font-medium text-gray-900">
               {title}
             </h3>
           )}

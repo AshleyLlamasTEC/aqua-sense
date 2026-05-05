@@ -13,7 +13,7 @@ import React from 'react';
  * @param {boolean} props.noPadding - Si es true, elimina el padding interno
  */
 const Card = ({ children, className = '', noPadding = false }) => {
-  const baseClasses = 'bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden';
+  const baseClasses = 'bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden';
   const paddingClasses = noPadding ? '' : 'p-5';
 
   return (

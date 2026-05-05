@@ -47,7 +47,7 @@ const Hero = () => {
           </h1>
 
           <p className="text-lg sm:text-xl text-white/90 max-w-2xl mx-auto mb-10">
-            AquaSense transforma tu acuario en un ecosistema inteligente. Monitorea temperatura,
+            AquaSenseIoT transforma tu acuario en un ecosistema inteligente. Monitorea temperatura,
             pH, TDS y más con nuestra plataforma IoT. Perfecto para entusiastas de acuarios
             que buscan precisión y tranquilidad.
           </p>

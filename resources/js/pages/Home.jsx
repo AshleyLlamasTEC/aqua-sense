@@ -86,7 +86,7 @@ const Home = () => {
               </h2>
 
               <p className="text-white/90 text-lg leading-relaxed">
-                Fundado por entusiastas de acuarios e innovadores tecnológicos, AquaSense combina
+                Fundado por entusiastas de acuarios e innovadores tecnológicos, AquaSenseIoT combina
                 tecnología IoT de vanguardia con un profundo conocimiento de los ecosistemas acuáticos.
                 Nuestra misión es hacer que el monitoreo de acuarios de nivel profesional sea accesible
                 para todos.
@@ -145,7 +145,7 @@ const Home = () => {
             </h2>
 
             <p className="text-xl text-gray-600 mb-8 animate-fade-up animation-delay-200">
-              Únete a miles de entusiastas de acuarios que confían en AquaSense para sus ecosistemas acuáticos
+              Únete a miles de entusiastas de acuarios que confían en AquaSenseIoT para sus ecosistemas acuáticos
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-up animation-delay-400">

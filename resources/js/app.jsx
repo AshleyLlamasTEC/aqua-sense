@@ -1,34 +1,25 @@
-/**
- * Punto de entrada principal de la aplicación React con Inertia.
- * Configura el proveedor de Inertia y cualquier contexto global (como el de tema).
- */
+import '../css/app.css';
+import './bootstrap';
 
-import React from 'react';
 import { createInertiaApp } from '@inertiajs/react';
+import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createRoot } from 'react-dom/client';
 
-// Importar estilos globales de Tailwind
-import '../css/app.css';
+const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
 createInertiaApp({
-  id: 'app',
-  resolve: name => {
-    // Resolución de páginas desde la carpeta pages
-    const pages = import.meta.glob('./pages/**/*.jsx', { eager: true });
-    return pages[`./pages/${name}.jsx`];
-  },
-  setup({ el, App, props }) {
-    createRoot(el).render(
-      <React.StrictMode>
-          <App {...props} />
-      </React.StrictMode>
-    );
-  },
-  progress: {
-    // Configuración de la barra de progreso de Inertia
-    delay: 250,
-    color: '#3b82f6',
-    includeCSS: true,
-    showSpinner: true,
-  },
+    title: (title) => `${title} - ${appName}`,
+    resolve: (name) =>
+        resolvePageComponent(
+            `./Pages/${name}.jsx`,
+            import.meta.glob('./Pages/**/*.jsx'),
+        ),
+    setup({ el, App, props }) {
+        const root = createRoot(el);
+
+        root.render(<App {...props} />);
+    },
+    progress: {
+        color: '#4B5563',
+    },
 });

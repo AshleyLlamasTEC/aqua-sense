@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import MainLayout from '@/Layouts/MainLayout';
 import { Link } from '@inertiajs/react';
 import {
-  Mail01Icon,
+  MailAtSign01Icon,
   SmartPhone01Icon,
   Location01Icon,
   Clock01Icon,
@@ -40,10 +40,10 @@ const Contact = () => {
 
   const contactInfo = [
     {
-      icon: Mail01Icon,
+      icon: MailAtSign01Icon,
       title: "Email",
-      details: "info@aquasense.com",
-      action: "mailto:info@aquasense.com",
+      details: "info@AquaSenseIoT.com",
+      action: "mailto:info@AquaSenseIoT.com",
       color: "from-cyan-500 to-blue-500"
     },
     {
@@ -78,7 +78,7 @@ const Contact = () => {
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="animate-fade-up">
             <div className="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 mb-6">
-              <Mail01Icon className="w-4 h-4 text-cyan-300" />
+              <MailAtSign01Icon className="w-4 h-4 text-cyan-300" />
               <span className="text-cyan-200 text-sm font-semibold">Contáctanos</span>
             </div>
             <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-white mb-6">
@@ -215,7 +215,7 @@ const Contact = () => {
                 <h3 className="text-xl font-bold text-gray-800 mb-4">Ubicación</h3>
                 <div className="aspect-video rounded-xl overflow-hidden shadow-lg mb-4">
                   <iframe
-                    title="AquaSense Location"
+                    title="AquaSenseIoT Location"
                     src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d253682.16328769424!2d-122.06201465861931!3d37.40222506478587!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x808fb68ad0cfc739%3A0x7f9b3a5c8b5b9f9e!2sSilicon%20Valley%2C%20CA%2C%20USA!5e0!3m2!1sen!2s!4v1700000000000!5m2!1sen!2s"
                     width="100%"
                     height="100%"
@@ -254,11 +254,11 @@ const Contact = () => {
               <div className="bg-gradient-to-r from-cyan-50 to-blue-50 rounded-2xl p-6 border border-cyan-100">
                 <div className="flex items-start space-x-3">
                   <div className="w-10 h-10 bg-cyan-100 rounded-full flex items-center justify-center flex-shrink-0">
-                    <Mail01Icon className="w-5 h-5 text-cyan-600" />
+                    <MailAtSign01Icon className="w-5 h-5 text-cyan-600" />
                   </div>
                   <div>
                     <p className="text-sm text-gray-600">¿Prefieres escribirnos?</p>
-                    <p className="font-semibold text-gray-800">soporte@aquasense.com</p>
+                    <p className="font-semibold text-gray-800">soporte@AquaSenseIoT.com</p>
                   </div>
                 </div>
               </div>

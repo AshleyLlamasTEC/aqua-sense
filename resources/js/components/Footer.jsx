@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 import { Link } from "@inertiajs/react";
 import {
-    DropletIcon,
     Facebook02Icon,
     TwitterIcon,
     InstagramIcon,
     GithubIcon,
-    Mail01Icon,
+    MailAtSign01Icon,
     TelephoneIcon,
     Location01Icon,
     SentIcon,
@@ -47,7 +46,7 @@ const Footer = () => {
                             />
                             <div>
                                 <span className="text-xl font-bold bg-gradient-to-r from-white to-cyan-200 bg-clip-text text-transparent">
-                                    AquaSense
+                                    AquaSenseIoT
                                 </span>
                                 <p className="text-xs text-cyan-300">
                                     Smart Aquarium Monitoring
@@ -193,7 +192,7 @@ const Footer = () => {
                         <form onSubmit={handleSubscribe} className="mb-6">
                             <div className="flex flex-col sm:flex-row gap-2">
                                 <div className="flex-1 relative">
-                                    <Mail01Icon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-500" />
+                                    <MailAtSign01Icon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-500" />
                                     <input
                                         type="email"
                                         value={email}
@@ -225,12 +224,12 @@ const Footer = () => {
                         {/* Información de contacto */}
                         <div className="space-y-3 pt-4 border-t border-gray-800">
                             <div className="flex items-center space-x-3 text-gray-400 hover:text-cyan-400 transition-colors">
-                                <Mail01Icon className="w-4 h-4" />
+                                <MailAtSign01Icon className="w-4 h-4" />
                                 <a
-                                    href="mailto:info@aquasense.com"
+                                    href="mailto:info@AquaSenseIoT.com"
                                     className="text-sm"
                                 >
-                                    info@aquasense.com
+                                    info@AquaSenseIoT.com
                                 </a>
                             </div>
                             <div className="flex items-center space-x-3 text-gray-400 hover:text-cyan-400 transition-colors">
@@ -253,7 +252,7 @@ const Footer = () => {
                 <div className="border-t border-gray-800 py-8 flex flex-col md:flex-row justify-between items-center gap-4">
                     <div className="text-center md:text-left">
                         <p className="text-sm text-gray-500">
-                            &copy; 2024 AquaSense. Todos los derechos
+                            &copy; 2024 AquaSenseIoT. Todos los derechos
                             reservados.
                         </p>
                     </div>

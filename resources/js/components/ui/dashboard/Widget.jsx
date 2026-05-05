@@ -23,19 +23,19 @@ const Widget = ({ title, icon, value, trend, trendUp = true, children, className
       <div className="flex items-start justify-between">
         {/* Título e Icono */}
         <div className="flex-1">
-          <div className="flex items-center gap-2 text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
-            {icon && <span className="text-gray-400 dark:text-gray-500">{icon}</span>}
+          <div className="flex items-center gap-2 text-sm font-medium text-gray-500 mb-1">
+            {icon && <span className="text-gray-400">{icon}</span>}
             <span>{title}</span>
           </div>
 
           {/* Valor y Tendencia */}
           {value && (
             <div className="flex items-baseline gap-2">
-              <span className="text-2xl font-semibold text-gray-900 dark:text-white">
+              <span className="text-2xl font-semibold text-gray-900">
                 {value}
               </span>
               {trend && (
-                <span className={`text-sm font-medium ${trendUp ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
+                <span className={`text-sm font-medium ${trendUp ? 'text-green-600' : 'text-red-600'}`}>
                   {trend}
                 </span>
               )}
