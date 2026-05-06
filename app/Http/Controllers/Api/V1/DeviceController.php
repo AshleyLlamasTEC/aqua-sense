@@ -2,6 +2,7 @@
 // ╔══════════════════════════════════════════════════════════════════════════╗
 // ║  app/Http/Controllers/Api/V1/DeviceController.php                       ║
 // ╚══════════════════════════════════════════════════════════════════════════╝
+
 /**
  * CONTROLLER: DeviceController
  * ─────────────────────────────────────────────────────────────────────────
@@ -26,10 +27,12 @@ use App\Models\Device;
 use App\Models\UserDevice;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\DB;
 
 class DeviceController extends Controller
 {
+    use AuthorizesRequests;
     /**
      * GET /api/v1/devices
      *
@@ -45,13 +48,15 @@ class DeviceController extends Controller
             ->where(function ($q) use ($request, $userAquariumIds) {
                 // Dispositivos en los acuarios del usuario
                 $q->whereIn('aquarium_id', $userAquariumIds)
-                  // O dispositivos compartidos explícitamente con el usuario
-                  ->orWhereHas('users', fn ($uq) =>
-                      $uq->where('users.id', $request->user()->id)
-                  );
+                    // O dispositivos compartidos explícitamente con el usuario
+                    ->orWhereHas(
+                        'users',
+                        fn($uq) =>
+                        $uq->where('users.id', $request->user()->id)
+                    );
             })
-            ->with(['aquarium:id,name', 'sensors' => fn ($q) => $q->active()->with('sensorType:id,name,slug,unit')])
-            ->withCount(['sensors', 'sensors as active_sensors_count' => fn ($q) => $q->where('is_active', true)]);
+            ->with(['aquarium:id,name', 'sensors' => fn($q) => $q->active()->with('sensorType:id,name,slug,unit')])
+            ->withCount(['sensors', 'sensors as active_sensors_count' => fn($q) => $q->where('is_active', true)]);
 
         // Filtro opcional por acuario
         if ($request->filled('aquarium_id')) {
@@ -131,17 +136,17 @@ class DeviceController extends Controller
 
         $device->load([
             'aquarium:id,name,species',
-            'sensors' => fn ($q) => $q->with([
+            'sensors' => fn($q) => $q->with([
                 'sensorType',
                 'latestReading',
-                'alertRules' => fn ($rq) => $rq->active(),
+                'alertRules' => fn($rq) => $rq->active(),
             ]),
         ]);
 
         // Agregar el rol del usuario sobre este dispositivo
         $role = $device->users()
-                       ->where('users.id', auth()->id())
-                       ->value('role') ?? 'owner'; // owner si es dueño del acuario
+            ->where('users.id', auth()->id())
+            ->value('role') ?? 'owner'; // owner si es dueño del acuario
 
         return response()->json([
             'data' => array_merge($device->toArray(), [
@@ -257,9 +262,9 @@ class DeviceController extends Controller
         $this->authorize('update', $device);
 
         UserDevice::where('device_id', $device->id)
-                  ->where('user_id', $user->id)
-                  ->where('role', '!=', 'owner') // No se puede revocar al owner original
-                  ->delete();
+            ->where('user_id', $user->id)
+            ->where('role', '!=', 'owner') // No se puede revocar al owner original
+            ->delete();
 
         return response()->json([
             'message' => "Acceso de {$user->name} revocado.",

@@ -54,14 +54,14 @@ return new class extends Migration
 
             // Rango operativo del HARDWARE del sensor
             // precision=8, scale=4 → soporta valores como 9999.9999
-            $table->decimal('op_min', 8, 4)->nullable();   // Mínimo del sensor
-            $table->decimal('op_max', 8, 4)->nullable();   // Máximo del sensor
+            $table->decimal('op_min', 12, 4)->nullable();   // Mínimo del sensor
+            $table->decimal('op_max', 12, 4)->nullable();   // Máximo del sensor
 
             // Rango seguro para los ESPECÍMENES (puede diferir por especie)
             // Estos son los defaults — cada device_sensor puede sobrescribirlos
             // mediante sus alert_rules
-            $table->decimal('safe_min', 8, 4)->nullable(); // Mínimo biológico sugerido
-            $table->decimal('safe_max', 8, 4)->nullable(); // Máximo biológico sugerido
+            $table->decimal('safe_min', 12, 4)->nullable(); // Mínimo biológico sugerido
+            $table->decimal('safe_max', 12, 4)->nullable(); // Máximo biológico sugerido
 
             $table->timestamps();
         });

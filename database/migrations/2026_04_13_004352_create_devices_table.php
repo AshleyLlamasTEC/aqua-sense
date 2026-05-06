@@ -46,7 +46,7 @@ return new class extends Migration
             $table->id();
 
             // FK al acuario donde está instalado físicamente
-            $table->foreignId('aquarium_id')
+            $table->foreignId('aquarium_id')->nullable()
                 ->constrained('aquariums')
                 ->cascadeOnDelete();
 
@@ -65,8 +65,8 @@ return new class extends Migration
             // El dispositivo guarda la key original; aquí solo el hash
             $table->string('api_key', 64)->unique();
 
-            // ENUM evita valores arbitrarios — solo estos 3 estados son válidos
-            $table->enum('status', ['online', 'offline', 'maintenance'])
+            // ENUM evita valores arbitrarios — solo estos 4 estados son válidos
+            $table->enum('status', ['online', 'offline', 'maintenance', 'unpaired'])
                 ->default('offline');
 
             // Última vez que el dispositivo envió datos exitosamente

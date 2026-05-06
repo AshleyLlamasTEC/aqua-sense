@@ -5,7 +5,7 @@
 
 // Importación dinámica de iconos de HugeIcons (asumiendo que se usan como componentes)
 // En un proyecto real, importarías los iconos específicos, ej:
-// import { Home03Icon, DashboardIcon, AquariumIcon, ... } from 'hugeicons/react';
+// import { Home03Icon, DashboardIcon, FishFoodIcon, ... } from 'hugeicons/react';
 
 // Placeholder para iconos
 import {
@@ -30,31 +30,31 @@ export const NAVIGATION_ITEMS = [
         route: "admin.aquariums.index",
         icon: FishFoodIcon,
     },
-    {
-        label: "Sensores",
-        // route: 'admin.sensors',
-        route: "admin.home",
-        icon: SoilTemperatureGlobalIcon,
-    },
-    {
-        label: "Configuración",
-        // route: 'admin.settings',
-        route: "admin.home",
-        icon: DashboardSquare02Icon,
-        children: [
-            // Ejemplo de submenú
-            {
-                label: "Perfil",
-                // route: "admin.settings.profile"
-                route: "admin.home",
-            },
-            {
-                label: "Preferencias",
-                // route: "admin.settings.preferences"
-                route: "admin.home",
-            },
-        ],
-    },
+    // {
+    //     label: "Sensores",
+    //     // route: 'admin.sensors',
+    //     route: "admin.home",
+    //     icon: SoilTemperatureGlobalIcon,
+    // },
+    // {
+    //     label: "Configuración",
+    //     // route: 'admin.settings',
+    //     route: "admin.home",
+    //     icon: DashboardSquare02Icon,
+    //     children: [
+    //         // Ejemplo de submenú
+    //         {
+    //             label: "Perfil",
+    //             // route: "admin.settings.profile"
+    //             route: "admin.home",
+    //         },
+    //         {
+    //             label: "Preferencias",
+    //             // route: "admin.settings.preferences"
+    //             route: "admin.home",
+    //         },
+    //     ],
+    // },
 ];
 
 /**

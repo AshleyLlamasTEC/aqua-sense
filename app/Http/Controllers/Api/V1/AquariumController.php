@@ -2,6 +2,7 @@
 // ╔══════════════════════════════════════════════════════════════════════════╗
 // ║  app/Http/Controllers/Api/V1/AquariumController.php                     ║
 // ╚══════════════════════════════════════════════════════════════════════════╝
+
 /**
  * CONTROLLER: AquariumController
  * ─────────────────────────────────────────────────────────────────────────
@@ -29,10 +30,11 @@ use App\Http\Requests\Aquarium\UpdateAquariumRequest;
 use App\Models\Aquarium;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class AquariumController extends Controller
 {
+    use AuthorizesRequests;
     /**
      * GET /api/v1/aquariums
      *
@@ -55,34 +57,30 @@ class AquariumController extends Controller
      *   "total": 1
      * }
      */
-    // public function index(Request $request): JsonResponse
-    // {
-    //     $this->authorize('viewAny', Aquarium::class);
 
-    //     $query = $request->user()
-    //         ->aquariums()
-    //         ->withCount('devices')              // Agrega devices_count sin N+1
-    //         ->with(['devices' => fn ($q) =>     // Carga solo dispositivos activos
-    //             $q->where('status', 'online')
-    //               ->select('id', 'aquarium_id', 'name', 'status', 'last_seen_at')
-    //         ]);
-
-    //     // Filtro opcional por estado
-    //     if ($request->boolean('active')) {
-    //         $query->active();
-    //     }
-
-    //     $aquariums = $query->latest()->get();
-
-    //     return response()->json([
-    //         'data'  => $aquariums,
-    //         'total' => $aquariums->count(),
-    //     ]);
-    // }
-
-    public function index()
+    public function index(Request $request): JsonResponse
     {
-        Return Inertia::render('Admin/Aquariums/Index');
+        $this->authorize('viewAny', Aquarium::class);
+
+        $query = $request->user()
+            ->aquariums()
+            ->withCount('devices')              // Agrega devices_count sin N+1
+            ->with(['devices' => fn ($q) =>     // Carga solo dispositivos activos
+                $q->where('status', 'online')
+                  ->select('id', 'aquarium_id', 'name', 'status', 'last_seen_at')
+            ]);
+
+        // Filtro opcional por estado
+        if ($request->boolean('active')) {
+            $query->active();
+        }
+
+        $aquariums = $query->latest()->get();
+
+        return response()->json([
+            'data'  => $aquariums,
+            'total' => $aquariums->count(),
+        ]);
     }
 
     /**
@@ -113,7 +111,7 @@ class AquariumController extends Controller
 
         return response()->json([
             'message' => 'Acuario creado correctamente.',
-            'data'    => $aquarium,
+            'data' => $aquarium,
         ], 201);
     }
 
@@ -137,7 +135,7 @@ class AquariumController extends Controller
                 $q->with([
                     'sensors' => function ($sq) {
                         $sq->active()
-                           ->with(['sensorType', 'latestReading']);
+                            ->with(['sensorType', 'latestReading']);
                     },
                 ]);
             },

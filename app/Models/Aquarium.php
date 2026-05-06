@@ -30,6 +30,8 @@ class Aquarium extends Model
 {
     use HasFactory;
 
+    protected $table = 'aquariums';
+
     protected $fillable = [
         'user_id',
         'name',
