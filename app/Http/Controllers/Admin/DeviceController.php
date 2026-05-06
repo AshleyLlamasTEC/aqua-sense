@@ -34,7 +34,8 @@ class DeviceController extends Controller
             $device = DB::transaction(function () use ($validated) {
                 // Bloqueo de fila para evitar que dos usuarios vinculen el mismo ID simultáneamente
                 $device = Device::query()
-                    ->where('uuid', $validated['device_identifier'])
+                    ->where('id', $validated['device_identifier'])
+                    //->where('uuid', $validated['device_identifier'])
                     ->lockForUpdate()
                     ->first();
 

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\V1\AquariumController;
 use App\Http\Controllers\Api\V1\DeviceController;
+use App\Http\Controllers\Api\V1\TelemetryController;
 use Illuminate\Support\Facades\Route;
 
 //Aquariums

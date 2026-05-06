@@ -35,8 +35,8 @@ class AquariumController extends Controller
             ->with([
                 // Eager loading de dispositivos: Solo cargamos nodos 'online' para el dashboard principal
                 'devices' => fn($q) =>
-                    $q->where('status', 'online')
-                      ->select('id', 'aquarium_id', 'name', 'status', 'last_seen_at')
+                $q->where('status', 'online')
+                    ->select('id', 'aquarium_id', 'name', 'status', 'last_seen_at')
             ]);
 
         // Filtro condicional: permite segmentar acuarios en producción vs mantenimiento
@@ -107,6 +107,11 @@ class AquariumController extends Controller
                             ->with([
                                 'sensorType',      // Metadata: unidades, rangos seguros, slugs
                                 'latestReading',   // Estado actual del sensor (último valor registrado)
+                                'readings' => function ($query) {
+                                    $query
+                                        ->valid()
+                                        ->recent(100);
+                                },
                             ]);
                     },
                 ]);

@@ -76,11 +76,16 @@ class DeviceApiKeyMiddleware
         // Marcar el dispositivo como online (actualiza last_seen_at)
         // withoutTimestamps() evita actualizar updated_at del modelo Device
         // solo por este ping — updated_at debe reflejar cambios reales
-        $device->withoutTimestamps()->update([
-            'last_seen_at' => now(),
-            'status'       => 'online',
-            'ip_address'   => $request->ip(),
-        ]);
+        Device::withoutTimestamps(function () use (
+            $device,
+            $request
+        ) {
+            $device->update([
+                'last_seen_at' => now(),
+                'status' => 'online',
+                'ip_address' => $request->ip(),
+            ]);
+        });
 
         // Adjuntar el dispositivo al request para que el controller lo use
         // sin hacer otra consulta a BD
