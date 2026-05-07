@@ -5,7 +5,7 @@
 
 // Importación dinámica de iconos de HugeIcons (asumiendo que se usan como componentes)
 // En un proyecto real, importarías los iconos específicos, ej:
-// import { Home03Icon, DashboardIcon, FishFoodIcon, ... } from 'hugeicons/react';
+// import { Home03Icon, DashboardSquare02Icon, FishFoodIcon, ... } from 'hugeicons/react';
 
 // Placeholder para iconos
 import {

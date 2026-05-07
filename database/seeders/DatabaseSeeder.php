@@ -48,7 +48,7 @@ class DatabaseSeeder extends Seeder
                 DeviceSeeder::class,
                 DeviceSensorSeeder::class,
                 AlertRuleSeeder::class,
-                TelemetrySeeder::class,
+                //TelemetrySeeder::class,
             ]);
         }
     }

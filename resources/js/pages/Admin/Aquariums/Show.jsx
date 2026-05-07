@@ -114,6 +114,17 @@ const TIME_RANGES = [
  * Dibuja una gráfica D3 en un contenedor HTML usando series agrupadas.
  * No devuelve nada, muta el DOM del contenedor.
  */
+/**
+ * Dibuja una gráfica D3 mejorada en un contenedor HTML.
+ * Mejoras aplicadas:
+ * - Dominio Y inteligente para valores constantes o con poca variación.
+ * - Líneas más gruesas y con mejor contraste.
+ * - Puntos (círculos) en cada medición para lectura precisa.
+ * - Grid más sutil y estética premium.
+ * - Tooltip multilínea que muestra TODOS los sensores en el punto más cercano.
+ * - Línea vertical seguidora del cursor y resaltado de puntos activos.
+ * - Labels del eje X con saltos de línea reales para evitar solapamiento.
+ */
 function drawChart(
     container,
     series,
@@ -142,40 +153,86 @@ function drawChart(
         .append("g")
         .attr("transform", `translate(${margin.left},${margin.top})`);
 
-    // Escalas
+    // --- Escalas ---
     const xDomain = d3.extent(allData, (d) => d.timestamp);
-    const yDomain = d3.extent(allData, (d) => d.value);
-
     const x = d3.scaleTime().domain(xDomain).range([0, innerWidth]);
 
-    const y = d3.scaleLinear().domain(yDomain).nice().range([innerHeight, 0]);
+    // Dominio Y inteligente: evitar distorsión si los valores son idénticos o muy cercanos
+    const yExtent = d3.extent(allData, (d) => d.value);
+    let yMin = yExtent[0];
+    let yMax = yExtent[1];
 
-    // Ejes
+    if (yMin === yMax) {
+        // Agregar un pequeño margen proporcional al valor para mantener visibilidad
+        const padding = Math.max(Math.abs(yMin) * 0.05, 0.1);
+        yMin -= padding;
+        yMax += padding;
+    }
+
+    const y = d3
+        .scaleLinear()
+        .domain([yMin, yMax])
+        .nice() // Aún aplicamos nice para redondear, pero ya con margen inteligente
+        .range([innerHeight, 0]);
+
+    // --- Ejes con estética mejorada ---
     const xAxis = d3
         .axisBottom(x)
         .ticks(width > 600 ? 8 : 5)
-        .tickFormat(d3.timeFormat("%H:%M\n%m/%d"));
+        .tickFormat(d3.timeFormat("%H:%M\n%m/%d")); // El salto de línea se procesa después
 
-    const yAxis = d3.axisLeft(y).ticks(5);
+    const yAxis = d3.axisLeft(y).ticks(6);
 
+    // Eje X
     g.append("g")
         .attr("transform", `translate(0, ${innerHeight})`)
         .call(xAxis)
-        .call((g) => g.select(".domain").attr("stroke", "#cbd5e1")) // slate-300
-        .call((g) => g.selectAll(".tick line").attr("stroke", "#e2e8f0"));
+        .call((g) => g.select(".domain").attr("stroke", "#94a3b8")) // Línea base más visible
+        .call((g) =>
+            g
+                .selectAll(".tick line")
+                .attr("stroke", "#cbd5e1")
+                .attr("stroke-width", 0.5),
+        )
+        .call((g) =>
+            // Convertir \n de los labels en <tspan> reales para que se muestren en dos líneas
+            g.selectAll(".tick text").each(function () {
+                const text = d3.select(this);
+                const lines = text.text().split("\n");
+                text.text(null); // Limpia el contenido anterior
 
+                lines.forEach((line, i) => {
+                    text.append("tspan")
+                        .attr("dy", i === 0 ? 0 : "1.2em") // La segunda línea con desplazamiento vertical
+                        .text(line);
+                });
+            }),
+        );
+
+    // Eje Y
     g.append("g")
         .call(yAxis)
-        .call((g) => g.select(".domain").attr("stroke", "#cbd5e1"))
-        .call((g) => g.selectAll(".tick line").attr("stroke", "#e2e8f0"));
+        .call((g) => g.select(".domain").attr("stroke", "#94a3b8"))
+        .call((g) =>
+            g
+                .selectAll(".tick line")
+                .attr("stroke", "#cbd5e1")
+                .attr("stroke-width", 0.5),
+        )
+        .call((g) =>
+            g
+                .selectAll(".tick text")
+                .attr("fill", "#475569")
+                .style("font-size", "11px"),
+        );
 
-    // Grid horizontal suave
+    // --- Grid horizontal muy sutil ---
     g.append("g")
         .attr("class", "grid")
         .call(
             d3
                 .axisLeft(y)
-                .ticks(5)
+                .ticks(6)
                 .tickSize(-innerWidth)
                 .tickFormat(() => ""),
         )
@@ -183,12 +240,16 @@ function drawChart(
             g
                 .selectAll(".tick line")
                 .attr("stroke", "#e2e8f0")
-                .attr("stroke-opacity", 0.7),
+                .attr("stroke-opacity", 0.4)
+                .attr("stroke-dasharray", "3 3"),
         )
         .call((g) => g.select(".domain").remove());
 
-    // Líneas
+    // --- Líneas y puntos de datos ---
     Object.entries(series).forEach(([slug, points]) => {
+        const color = SENSOR_COLORS[slug] || "#94a3b8";
+
+        // Línea más gruesa y con bordes redondeados
         const lineGen = d3
             .line()
             .x((d) => x(d.timestamp))
@@ -198,30 +259,74 @@ function drawChart(
         g.append("path")
             .datum(points)
             .attr("fill", "none")
-            .attr("stroke", SENSOR_COLORS[slug] || "#94a3b8")
-            .attr("stroke-width", 2)
+            .attr("stroke", color)
+            .attr("stroke-width", 2.5)
+            .attr("stroke-linecap", "round")
+            .attr("stroke-linejoin", "round")
             .attr("d", lineGen);
+
+        // Círculos para cada punto de medición (refuerzan la lectura)
+        g.append("g")
+            .selectAll("circle")
+            .data(points)
+            .join("circle")
+            .attr("cx", (d) => x(d.timestamp))
+            .attr("cy", (d) => y(d.value))
+            .attr("r", 2.8)
+            .attr("fill", color)
+            .attr("opacity", 0.75)
+            .attr("stroke", "#ffffff")
+            .attr("stroke-width", 0.5);
     });
 
-    // --- Tooltip ---
+    // --- Elementos para la interacción hover ---
+    // Línea vertical seguidora del cursor
+    const hoverLine = g
+        .append("line")
+        .attr("y1", 0)
+        .attr("y2", innerHeight)
+        .attr("stroke", "#64748b")
+        .attr("stroke-width", 1.5)
+        .attr("stroke-dasharray", "4 4")
+        .style("opacity", 0);
+
+    // Grupo para los puntos resaltados en hover (uno por cada serie)
+    const hoverHighlights = g.append("g").style("opacity", 0);
+
+    // Creamos un círculo resaltado por cada serie (se posicionará en el punto más cercano)
+    Object.keys(series).forEach((slug) => {
+        hoverHighlights
+            .append("circle")
+            .attr("r", 5)
+            .attr("fill", "#ffffff")
+            .attr("stroke", SENSOR_COLORS[slug] || "#94a3b8")
+            .attr("stroke-width", 2.5)
+            .style("display", "none"); // Se mostrará solo cuando haya datos
+    });
+
+    // Tooltip externo (mejorado estéticamente)
     const tooltip = d3
         .select(container)
         .append("div")
         .attr("class", "chart-tooltip")
         .style("position", "absolute")
         .style("pointer-events", "none")
-        .style("background", "rgba(255,255,255,0.95)")
-        .style("padding", "6px 12px")
-        .style("border-radius", "12px")
-        .style("box-shadow", "0 4px 12px rgba(0,0,0,0.1)")
+        .style("background", "rgba(255,255,255,0.98)")
+        .style("padding", "10px 16px")
+        .style("border-radius", "16px")
+        .style("box-shadow", "0 8px 24px rgba(0,0,0,0.12)")
         .style("font-size", "11px")
         .style("font-weight", "600")
         .style("color", "#1e293b")
         .style("opacity", 0)
-        .style("transition", "opacity 0.1s");
+        .style("transition", "opacity 0.15s ease")
+        .style("border", "1px solid rgba(148,163,184,0.2)");
 
-    // Bisectriz y overlay interactivo
-    const bisect = d3.bisector((d) => d.timestamp).left;
+    // --- Lógica de interacción (overlay + mousemove) ---
+    const bisectors = {}; // Un bisector por serie para encontrar el punto más cercano
+    Object.entries(series).forEach(([slug, pts]) => {
+        bisectors[slug] = d3.bisector((d) => d.timestamp).left;
+    });
 
     const overlay = svg
         .append("rect")
@@ -233,41 +338,88 @@ function drawChart(
     overlay
         .on("mousemove", function (event) {
             const [mx, my] = d3.pointer(event, this);
-            const x0 = x.invert(mx - margin.left);
+            const mouseX = mx - margin.left;
+            const mouseY = my - margin.top;
 
-            // Encontrar punto más cercano entre todos los datos
-            let closest = null;
-            let minDist = Infinity;
-            allData.forEach((d) => {
-                const dist = Math.abs(d.timestamp - x0);
-                if (dist < minDist) {
-                    minDist = dist;
-                    closest = d;
-                }
+            // Si el ratón está fuera del área de dibujo, ocultamos todo
+            if (mouseX < 0 || mouseX > innerWidth) {
+                hoverLine.style("opacity", 0);
+                hoverHighlights.style("opacity", 0);
+                tooltip.style("opacity", 0);
+                return;
+            }
+
+            // Valor X correspondiente a la posición del ratón
+            const xValue = x.invert(mouseX);
+
+            // Actualizar línea vertical
+            hoverLine.attr("x1", mouseX).attr("x2", mouseX).style("opacity", 1);
+
+            // Construir tooltip y posicionar círculos de resaltado
+            let tooltipHtml = "";
+            let anyPointFound = false;
+
+            // Para cada serie, buscar el punto más cercano en el tiempo
+            Object.entries(series).forEach(([slug, pts], i) => {
+                const bisect = bisectors[slug];
+                const idx = bisect(pts, xValue);
+                // Asegurar índice válido
+                const closest =
+                    idx >= pts.length
+                        ? pts[pts.length - 1]
+                        : idx > 0 &&
+                            xValue - pts[idx - 1].timestamp <
+                                pts[idx].timestamp - xValue
+                          ? pts[idx - 1]
+                          : pts[idx];
+
+                if (!closest) return;
+
+                anyPointFound = true;
+
+                // Posicionar el círculo resaltado de esta serie
+                const circle = d3.select(
+                    hoverHighlights.selectAll("circle").nodes()[i],
+                );
+                circle
+                    .attr("cx", x(closest.timestamp))
+                    .attr("cy", y(closest.value))
+                    .style("display", null); // Visible
+
+                // Agregar línea al tooltip
+                const color = SENSOR_COLORS[slug] || "#94a3b8";
+                const label = SENSOR_LABELS[slug] || slug;
+                tooltipHtml += `
+                    <div style="display:flex; align-items:center; gap:6px; margin-bottom:4px;">
+                        <span style="display:inline-block; width:10px; height:10px; border-radius:50%; background:${color}; flex-shrink:0;"></span>
+                        <span style="font-weight:700; color:#334155;">${label}</span>
+                        <span style="font-weight:800; margin-left:auto;">${closest.value.toFixed(2)}</span>
+                    </div>`;
             });
 
-            if (closest) {
-                const label = SENSOR_LABELS[closest.sensor] || closest.sensor;
+            // Mostrar tooltip solo si hay al menos un punto
+            if (anyPointFound) {
                 tooltip
                     .style("opacity", 1)
-                    .html(
-                        `
-                    <div style="display:flex;align-items:center;gap:6px;">
-                        <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${SENSOR_COLORS[closest.sensor] || "#94a3b8"};"></span>
-                        <span>${label}</span>
-                    </div>
-                    <div style="font-size:13px;font-weight:800;">${closest.value.toFixed(2)}</div>
-                    <div style="font-size:9px;color:#64748b;">${d3.timeFormat("%d/%m %H:%M")(closest.timestamp)}</div>
-                `,
-                    )
+                    .html(tooltipHtml)
                     .style(
                         "left",
-                        `${Math.min(mx + 15, container.offsetWidth - 120)}px`,
+                        `${Math.min(mx + 15, container.offsetWidth - 180)}px`,
                     )
-                    .style("top", `${Math.max(my - 50, 10)}px`);
+                    .style("top", `${Math.max(my - 80, 10)}px`);
+            } else {
+                tooltip.style("opacity", 0);
             }
+
+            hoverHighlights.style("opacity", 1);
         })
-        .on("mouseleave", () => tooltip.style("opacity", 0));
+        .on("mouseleave", function () {
+            hoverLine.style("opacity", 0);
+            hoverHighlights.style("opacity", 0);
+            tooltip.style("opacity", 0);
+            // Ocultar todos los círculos resaltados
+            hoverHighlights.selectAll("circle").style("display", "none");
+        });
 }
 
 /* =============================================================
@@ -969,7 +1121,14 @@ export default function Show({ aquarium }) {
                         device_id: device.id,
                         sensor: sensor.sensor_type?.slug,
                         value: Number(reading.value),
-                        timestamp: new Date(reading.recorded_at),
+                        timestamp: new Date(
+                            new Date(reading.recorded_at).toLocaleString(
+                                "en-US",
+                                {
+                                    timeZone: "America/Tijuana",
+                                },
+                            ),
+                        ),
                     });
                 });
             });

@@ -5,13 +5,13 @@ import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
 import { Link, usePage } from '@inertiajs/react';
 import { useState } from 'react';
 import {
-    DashboardIcon,
+    DashboardSquare02Icon,
     DropletIcon,
     UserIcon,
-    LogoutIcon,
-    MenuIcon,
-    CloseIcon
-} from '@hugeicons/react';
+    Logout01Icon,
+    Menu01Icon,
+    Cancel01Icon
+} from "hugeicons-react";
 
 export default function AuthenticatedLayout({ header, children }) {
 
@@ -59,7 +59,7 @@ export default function AuthenticatedLayout({ header, children }) {
                                 >
 
                                     <div className="flex items-center space-x-1">
-                                        <DashboardIcon className="h-4 w-4" />
+                                        <DashboardSquare02Icon className="h-4 w-4" />
                                         <span>Panel</span>
                                     </div>
 
@@ -146,7 +146,7 @@ export default function AuthenticatedLayout({ header, children }) {
                                         className="flex items-center space-x-2 px-4 py-2 hover:bg-blue-50 text-red-600"
                                     >
 
-                                        <LogoutIcon className="h-4 w-4" />
+                                        <Logout01Icon className="h-4 w-4" />
 
                                         <span>
                                             Cerrar sesión
@@ -172,8 +172,8 @@ export default function AuthenticatedLayout({ header, children }) {
 
                                 {
                                     showingNavigationDropdown
-                                        ? <CloseIcon className="h-6 w-6" />
-                                        : <MenuIcon className="h-6 w-6" />
+                                        ? <Cancel01Icon className="h-6 w-6" />
+                                        : <Menu01Icon className="h-6 w-6" />
                                 }
 
                             </button>

@@ -58,6 +58,8 @@ class DeviceSeeder extends Seeder
             $plainKey = bin2hex(random_bytes(32));
             $hashedKey = hash('sha256', $plainKey);
 
+            $this->command->info("- Plain del dispositivo: {$data['mac_address']} → {$plainKey}");
+
             $device = Device::create([
                 'aquarium_id' => $data['aquarium_id'],
                 'name' => $data['name'],
